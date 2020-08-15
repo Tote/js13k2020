@@ -3,7 +3,7 @@ import Graphics from "./Graphics.js"
 
 export default class Gloop{
     constructor(graphics){
-		this.rules = []
+		this.rules = {timed: [], regular: []}
 		this.items = []
 		this.looper = fn => window.requestAnimationFrame(fn)
 		this.graphics = graphics
@@ -15,19 +15,30 @@ export default class Gloop{
 		this.items.forEach( item => {
 			item.next(timestamp)
 		})
-		this.rules
+
+		this.rules.timed
+			.filter(  rule => timestamp > rule.lastExecution + rule.every ) 
+			.forEach( rule => {rule.then(); rule.lastExecution = timestamp} )
+
+		this.rules.regular
 			.filter(  rule => rule.when() ) 
 			.forEach( rule => rule.then() )
 
 		this.items.forEach( item => {
-			item.draw(this.graphics)
+			item.draw(this.graphics, timestamp)
 		})
 		
 		this.looper( this.run.bind(this) )
 	}
 
 	rule( rule ){
-		this.rules.push(rule)
+		if('every' in rule){
+			rule.lastExecution = 0
+			this.rules.timed.push(rule)
+		}
+		else if('when' in rule){
+			this.rules.regular.push(rule)
+		}
 	}
 	
 	item( item ){
