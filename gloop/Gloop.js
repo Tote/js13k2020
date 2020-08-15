@@ -41,7 +41,7 @@ export default class Gloop{
 		}
 	}
 	
-	item( item ){
+	add( item ){
 		this.items.push(item)
 	}
 
