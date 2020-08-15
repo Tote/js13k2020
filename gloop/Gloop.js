@@ -18,7 +18,7 @@ export default class Gloop{
 
 		this.rules.timed
 			.filter(  rule => timestamp > rule.lastExecution + rule.every ) 
-			.forEach( rule => {rule.then(); rule.lastExecution = timestamp} )
+			.forEach( rule => {rule.then(timestamp); rule.lastExecution = timestamp} )
 
 		this.rules.regular
 			.filter(  rule => rule.when() ) 
