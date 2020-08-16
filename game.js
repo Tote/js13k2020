@@ -2,6 +2,7 @@ import Gloop from './gloop/Gloop.js'
 import BrowserEvent from './gloop/BrowserEvent.js'
 import Platform from './items/Platform.js'
 import Character from './items/Character.js'
+import Level from './items/Level.js'
 
 /**********************************************/
 /** OBJECT CREATION                        **/
@@ -15,28 +16,31 @@ ground.size({w: game.width(), h: 50})
 ground.moveTo({x: 0, y: game.height() - ground.h})
 game.add(ground)
 
-const platform = new Platform()
-platform.moveTo({x: game.width(), y:ground.y - platform.h})
-game.add(platform)
+// const platform = new Platform()
+// platform.moveTo({x: game.width(), y:ground.y - platform.h})
+// game.add(platform)
+
+const level = new Level({w: game.width(), h:game.height() - ground.h})
+game.add(level)
 
 const character = new Character()
-character.moveTo({x: 200, y: 500})
+character.size(level.gridSize)
+character.moveTo({x: 2*level.gridSize.w, y: ground.y - character.h})
 game.add(character)
 
 /**********************************************/
 /**  GAME RULES                              **/
 /**********************************************/
 game.rule({
-    every: 1000,
-    then: t => console.log(`It's ${t}!`)
-})
-game.rule({
     when: () => character.collidesWith(ground),
     then: () => character.inellasticCollision(ground)
 })
 game.rule({
-    when: () => character.collidesWith(platform),
-    then: () => character.inellasticCollision(platform)
+    when: () => true,
+    then: () => 
+                level.items
+                    .find( p => character.collidesWith(p))
+                    ?.inellasticCollision(character, true)
 })
 
 /**********************************************/
