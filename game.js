@@ -52,4 +52,13 @@ press.rule({
     then: () => character.jump()
 })
 
+press.rule({
+    when: e => e.key == 'ArrowLeft',
+    then: () => level.runLeft()
+})
+press.rule({
+    when: e => e.key == 'ArrowRight',
+    then: () => level.runRight()
+})
+
 game.run()

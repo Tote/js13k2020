@@ -48,7 +48,7 @@ export default class Level extends GloopCollection{
             this.loadCol(next)
             this.nextCol = next
         }
-        
+
     }
 
     loadCol(c){
@@ -66,4 +66,15 @@ export default class Level extends GloopCollection{
         platform.vx = -this.speed
         this.add(platform)
     }
+
+    runLeft(){
+        this.speed = -Math.abs(this.speed)
+        this.all( p => p.vx = -this.speed )
+    }
+
+    runRight(){
+        this.speed = Math.abs(this.speed)
+        this.all( p => p.vx = -this.speed )
+    }
+
 }
